@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export default async function fetchingVehicles(type) {
- 
+export default async function fetchingModels(model) {
+    console.log(model, "se esta pasando?")
     try {
-        const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/${type}?format=json`);
+        const response = await axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${model}?format=json`);
         
         return response;
     } catch (error) {

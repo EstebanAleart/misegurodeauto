@@ -1,8 +1,17 @@
-// components/Autocomplete.js
+
 import React, { useState } from 'react';
 import { Form, ListGroup } from 'react-bootstrap';
+import autos from '../utils/carBrands';
 
-export default function Autocomplete  ({ brands, inputValue, setInputValue, setFilteredBrands, setShowSuggestions }) {
+export default function AutocompleteBrand  ({ onBrandSelect}) {
+    const brands= autos
+    const [inputValue, setInputValue] = useState('');
+    const [filteredBrands, setFilteredBrands] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+
+    
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -23,6 +32,7 @@ export default function Autocomplete  ({ brands, inputValue, setInputValue, setF
     setInputValue(suggestion.MakeName);
     setFilteredBrands([]);
     setShowSuggestions(false);
+    onBrandSelect(suggestion.MakeName);
   };
 
   return (
@@ -31,10 +41,10 @@ export default function Autocomplete  ({ brands, inputValue, setInputValue, setF
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Busca marcas..."
+        placeholder="Buscar marcas..."
       />
       {showSuggestions && filteredBrands.length > 0 && (
-        <ListGroup className="position-absolute w-100 mt-1">
+        <ListGroup className="position-absolute w-100 mt-1 z-3">
           {filteredBrands.map(brand => (
             <ListGroup.Item
               key={brand.MakeId}
