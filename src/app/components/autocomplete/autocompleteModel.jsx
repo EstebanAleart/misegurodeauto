@@ -23,6 +23,7 @@ export default function AutocompleteModel({ models, onModelSelect }) {
 
     // Llamar a la función de selección de modelo con el valor actual del input
     onModelSelect(value);
+    
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -38,7 +39,7 @@ export default function AutocompleteModel({ models, onModelSelect }) {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Buscar modelos..."
+        placeholder="Buscar modelo..."
       />
       {showSuggestions && (
         <ListGroup className="position-absolute w-100 mt-1">

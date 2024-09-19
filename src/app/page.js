@@ -1,20 +1,20 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, ListGroup } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import fetchingVehicles from './components/fetching/fetchVehicleType';
 import AutocompleteBrand from './components/autocomplete/autocompleteBrand';
 import fetchingModels from './components/fetching/fetchingModel';
 import AutocompleteModel from './components/autocomplete/autocompleteModel';
 import AutocompleteProvinces from './components/autocomplete/autocompleteProvinces';
 
-
-
 export default function ContactFormMain() {
   const [brands, setBrands] = useState([]);
   const [type, setType] = useState("");
-  const [selectedBrand,setSelectedBrand]=useState(undefined);
-  const [selectedModel,setSelectedModel]=useState(undefined);
-  const [models, setModels]= useState([])
+  const [selectedBrand, setSelectedBrand] = useState(undefined);
+  const [selectedModel, setSelectedModel] = useState(undefined);
+  const [models, setModels] = useState([]);
+  const [selectedprov, setSelectedprov]= useState(undefined)
+
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -32,17 +32,22 @@ export default function ContactFormMain() {
   });
 
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
-
       [e.target.id]: e.target.value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validar que los campos obligatorios no estén vacíos
+    // Añadir selectedBrand y selectedModel a formData
+    const formWithBrandModel = {
+      ...formData,
+      marca: selectedBrand || '',
+      modelo: selectedModel || '',
+      provincia:selectedprov || "",
+    };
+    
     const {
       nombre,
       apellido,
@@ -51,25 +56,25 @@ export default function ContactFormMain() {
       provincia,
       localidad,
       tipoVehiculo,
-      marca:selectedBrand,
-      modelo:selectedModel,
+      marca,
+      modelo,
       año,
-      usoVehiculo
-    } = formData;
-
+      usoVehiculo,
+      mensaje
+    } = formWithBrandModel;
+    
     
 
     // Construir el mensaje de WhatsApp
-    const mensaje = `Nombre: ${nombre}\nApellido: ${apellido}\nCelular: ${celular}\nEmail: ${email}\nProvincia: ${provincia}\nLocalidad: ${localidad}\nTipo de Vehículo: ${tipoVehiculo}\nMarca: ${marca}\nModelo: ${modelo}\nAño: ${año}\nUso del Vehículo: ${usoVehiculo}\nMensaje: ${formData.mensaje || "Sin mensaje"}`;
+    const whatsappMessage = `Hola mi nombre completo es ${nombre} ${apellido}\nMis datos de contacto son:\nCelular: ${celular}\nEmail: ${email}\nResido en la Provincia: ${provincia}, Localidad: ${localidad}\nQuisiera cotizar un seguro para mi vehiculo:\nTipo de Vehículo: ${tipoVehiculo === "car" ? "auto" : ""}\nMarca: ${marca}\nModelo: ${modelo}\nAño: ${año}\nUso del Vehículo: ${usoVehiculo}\nMensaje: ${mensaje || "Sin mensaje"}`;
 
-    console.log(mensaje)
+   
+
     // Redirigir a WhatsApp
-    const whatsappURL = `https://wa.me/3412285850?text=${encodeURIComponent(mensaje)}`;
+    const whatsappURL = `https://wa.me/+543416105284?text=${encodeURIComponent(whatsappMessage)}`;
     window.open(whatsappURL, '_blank');
   };
 
-
-  
   useEffect(() => {
     const fetchBrands = async () => {
       if (type) {
@@ -89,10 +94,8 @@ export default function ContactFormMain() {
 
   useEffect(() => {
     const fetchModels = async () => {
-      
       if (selectedBrand) {
         try {
-          
           const response = await fetchingModels(selectedBrand);
           if (response.data.Results) {
             setModels(response.data.Results);
@@ -103,15 +106,13 @@ export default function ContactFormMain() {
       }
     };
 
-    fetchModels()
+    fetchModels();
   }, [selectedBrand]);
-  useEffect(() => {
-
-  }, []);
 
   const handleVehicleChange = (event) => {
     setType(event.target.value);
   };
+
   const handleBrandChange = (brand) => {
     setSelectedBrand(brand);
   };
@@ -120,8 +121,10 @@ export default function ContactFormMain() {
     setSelectedModel(model);
   };
 
-  
-  
+  const handleProvChange =(prov)=>{
+    setSelectedprov(prov)
+  }
+
   return (
     <Container>
       <h1 className="text-primary my-4">Formulario de Contacto</h1>
@@ -158,7 +161,7 @@ export default function ContactFormMain() {
           <Col sm={12} md={6} className="mb-3">
             <Form.Group controlId="provincia">
               <Form.Label>Provincia</Form.Label>
-              <AutocompleteProvinces onChange={(e) => { handleChange(e) }} required />
+              <AutocompleteProvinces onProvSelect={handleProvChange} required />
             </Form.Group>
           </Col>
           <Col sm={12} md={6}>
@@ -181,7 +184,7 @@ export default function ContactFormMain() {
           <Col sm={12} md={6}>
             <Form.Group controlId="marca">
               <Form.Label>Marca</Form.Label>
-              <AutocompleteBrand brands={brands} onBrandSelect={handleBrandChange} onChange={(e) => { handleChange(e); }} />
+              <AutocompleteBrand brands={brands} onBrandSelect={handleBrandChange} />
             </Form.Group>
           </Col>
         </Row>
@@ -195,7 +198,7 @@ export default function ContactFormMain() {
           <Col sm={12} md={6}>
             <Form.Group controlId="modelo">
               <Form.Label>Modelo</Form.Label>
-              <AutocompleteModel models={models} onModelSelect={handleModelChange} onChange={(e) => { handleChange(e); }} />
+              <AutocompleteModel models={models} onModelSelect={handleModelChange} />
             </Form.Group>
           </Col>
         </Row>

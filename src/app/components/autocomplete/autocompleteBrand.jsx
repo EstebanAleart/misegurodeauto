@@ -41,7 +41,7 @@ export default function AutocompleteBrand  ({ onBrandSelect}) {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Buscar marcas..."
+        placeholder="Buscar marca..."
       />
       {showSuggestions && filteredBrands.length > 0 && (
         <ListGroup className="position-absolute w-100 mt-1 z-3">

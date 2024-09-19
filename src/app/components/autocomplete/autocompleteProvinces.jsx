@@ -3,7 +3,7 @@ import Provincias from "../utils/provincias";
 import React, { useState } from 'react';
 import { Form, ListGroup } from 'react-bootstrap';
 
-export default function AutocompleteProvinces() {
+export default function AutocompleteProvinces({onProvSelect}) {
   const [inputValue, setInputValue] = useState('');
   const [filteredProv, setFilteredProv] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -12,6 +12,7 @@ export default function AutocompleteProvinces() {
     const value = e.target.value;
     setInputValue(value);
 
+    
     if (value) {
       const filtered = Provincias.filter((prov) =>
        prov.nombre.toLowerCase().includes(value.toLowerCase())
@@ -23,10 +24,12 @@ export default function AutocompleteProvinces() {
       setShowSuggestions(false);
     }
 
-
+    onProvSelect(value);
+  
   };
 
   const handleSuggestionClick = (suggestion) => {
+  
     setInputValue(suggestion.nombre);
     setFilteredProv([]);
     setShowSuggestions(false);
@@ -39,7 +42,7 @@ export default function AutocompleteProvinces() {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Buscar marcas..."
+        placeholder="Buscar provincia..."
       />
       {showSuggestions && filteredProv.length > 0 && (
         <ListGroup className="position-absolute w-100 mt-1">
