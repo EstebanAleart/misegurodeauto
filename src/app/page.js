@@ -191,21 +191,13 @@ export default function ContactFormMain() {
             </Form.Group>
           </Col>
         </Row>
-        <Row className="mb-5">
+        <Row >
           <Col sm={12} md={6} className="mb-3">
             <Form.Group controlId="año">
               <Form.Label>Año</Form.Label>
               <Form.Control type="number" placeholder="Ingresa el año del vehículo" onChange={handleChange} required />
             </Form.Group>
           </Col>
-          <Col sm={12} md={6}>
-            <Form.Group controlId="modelo">
-              <Form.Label>Modelo</Form.Label>
-              <AutocompleteModel models={models} onModelSelect={handleModelChange} />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row className="mb-3">
           <Col sm={12} md={6} className="mb-3">
             <Form.Group controlId="usoVehiculo">
               <Form.Label>Uso del vehículo</Form.Label>
@@ -214,6 +206,15 @@ export default function ContactFormMain() {
                 <option value="personal">Personal</option>
                 <option value="comercial">Comercial</option>
               </Form.Control>
+            </Form.Group>
+          </Col>
+          
+        </Row >
+        <Row className="mb-5">
+        <Col sm={12} md={6}>
+            <Form.Group controlId="modelo">
+              <Form.Label>Modelo</Form.Label>
+              <AutocompleteModel models={models} onModelSelect={handleModelChange} />
             </Form.Group>
           </Col>
         </Row>

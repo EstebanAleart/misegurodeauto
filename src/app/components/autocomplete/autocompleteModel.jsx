@@ -55,7 +55,7 @@ export default function AutocompleteModel({ models, onModelSelect }) {
             ))
           ) : (
             <ListGroup.Item 
-            disabled
+            disabled 
             className="text-muted small p-2 text-center  mb-5 ">
               Puedes ingresar el modelo manualmente. Solo dejalo escrito.
             </ListGroup.Item>
