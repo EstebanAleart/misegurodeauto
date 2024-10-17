@@ -6,6 +6,8 @@ import AutocompleteBrand from './components/autocomplete/autocompleteBrand';
 import fetchingModels from './components/fetching/fetchingModel';
 import AutocompleteModel from './components/autocomplete/autocompleteModel';
 import AutocompleteProvinces from './components/autocomplete/autocompleteProvinces';
+import IconWhatsapp from './components/icon/iconWhatsapp';
+// import IconMail from './components/icon/iconMail';
 
 export default function ContactFormMain() {
   const [brands, setBrands] = useState([]);
@@ -127,8 +129,9 @@ export default function ContactFormMain() {
 
   return (
     <Container>
-      <h1 className="text-primary my-4">Formulario de Contacto</h1>
-      <Form className="text-dark fw-bold" onSubmit={handleSubmit}>
+      {/* <h1 className="text-primary my-4">Formulario de Contacto</h1> */}
+      <h1 className="text-primary my-4 ">     </h1>
+      <Form className="text-dark fw-bold mt-5" onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Col sm={12} md={6} className="mb-3">
             <Form.Group controlId="nombre">
@@ -220,9 +223,18 @@ export default function ContactFormMain() {
             <Form.Control as="textarea" rows={3} placeholder="Escribe tu mensaje aquí" onChange={handleChange} />
           </Form.Group>
         </Row>
-        <Button variant="primary" type="submit">
-          Enviar
+        <Row className="mb-5">
+        {/* <Col sm={12} md={6} className='mt-3'> 
+        <Button variant="primary" type="submit" >
+          Enviar mail <IconMail size="30px"/>
         </Button>
+        </Col> */}
+        <Col sm={12} md={6} className='mt-3'> 
+        <Button variant='btn btn-success' type="submit">
+          Enviar WhatsApp <IconWhatsapp size="30"/>
+        </Button>
+        </Col>
+        </Row>
       </Form>
     </Container>
   );
