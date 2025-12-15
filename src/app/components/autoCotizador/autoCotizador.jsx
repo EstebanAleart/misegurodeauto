@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert, Spinner, Card } from 'react-bootstrap';
-import { obtenerCotizacion, validarVehiculo } from '../../services/libra-api';
+import { obtenerCotizacion } from '../../services/libra-api';
+import { obtenerCodiaDesdeTabla } from '../../utils/codigoInfoAuto';
 import './autoCotizador.css';
 
 export default function AutoCotizador() {
@@ -18,14 +19,16 @@ export default function AutoCotizador() {
     telefono: '',
     documento: '',
     provincia: '',
+    codPostal: '',
     
     // Datos del vehículo
     tipoVehiculo: 'auto', // auto, moto, camioneta, etc.
-    marca: '',
-    modelo: '',
-    año: '',
+    marca: 'Toyota',
+    modelo: 'Corolla',
+    año: '2012',
     patente: '',
     uso: 'particular', // particular, comercial, etc.
+    codIA: '8840030', // Código InfoAuto - ejemplo de LIBRA
     
     // Cobertura
     cobertura: 'basica', // basica, extendida, premium
@@ -41,6 +44,23 @@ export default function AutoCotizador() {
     setError(null);
   };
 
+  // Sugerir CodIA cuando cambian marca, modelo o año (pero permitir edición manual)
+  useEffect(() => {
+    if (formData.marca && formData.modelo && formData.año) {
+      const codIA = obtenerCodiaDesdeTabla(formData.marca, formData.modelo, parseInt(formData.año));
+      // Solo actualizar si encontró un código válido (diferente de 0)
+      if (codIA !== 0) {
+        setFormData(prev => ({
+          ...prev,
+          codIA: String(codIA)
+        }));
+      }
+      // Si es 0, dejar el campo para que el usuario lo complete manualmente
+    }
+  }, [formData.marca, formData.modelo, formData.año]);
+
+
+
   const validarFormulario = () => {
     const camposRequeridos = [
       'nombre',
@@ -49,6 +69,7 @@ export default function AutoCotizador() {
       'telefono',
       'documento',
       'provincia',
+      'codPostal',
       'marca',
       'modelo',
       'año',
@@ -92,18 +113,7 @@ export default function AutoCotizador() {
     setCotizacion(null);
 
     try {
-      // Datos del vehículo para validar
-      const vehicleData = {
-        marca: formData.marca,
-        modelo: formData.modelo,
-        año: parseInt(formData.año),
-        patente: formData.patente.toUpperCase()
-      };
-
-      // Validar vehículo
-      await validarVehiculo(vehicleData);
-
-      // Preparar datos para cotización
+      // Preparar datos para cotización (incluye validación de vehículo)
       const cotizacionData = {
         // Asegurado
         asegurado: {
@@ -112,7 +122,8 @@ export default function AutoCotizador() {
           email: formData.email,
           telefono: formData.telefono,
           documento: formData.documento,
-          provincia: formData.provincia
+          provincia: formData.provincia,
+          codPostal: formData.codPostal
         },
         
         // Vehículo
@@ -122,7 +133,8 @@ export default function AutoCotizador() {
           modelo: formData.modelo,
           año: parseInt(formData.año),
           patente: formData.patente.toUpperCase(),
-          uso: formData.uso
+          uso: formData.uso,
+          codIA: formData.codIA ? parseInt(formData.codIA) : 0
         },
         
         // Cobertura
@@ -132,7 +144,7 @@ export default function AutoCotizador() {
         }
       };
 
-      // Obtener cotización
+      // Obtener cotización (la API valida el vehículo internamente)
       const resultado = await obtenerCotizacion(cotizacionData);
       
       setCotizacion(resultado);
@@ -282,6 +294,22 @@ export default function AutoCotizador() {
                   </Col>
                   <Col md={6}>
                     <Form.Group>
+                      <Form.Label>Código Postal *</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="codPostal"
+                        value={formData.codPostal}
+                        onChange={handleInputChange}
+                        placeholder="2000"
+                        required
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col md={12}>
+                    <Form.Group>
                       <Form.Label>Provincia *</Form.Label>
                       <Form.Select
                         name="provincia"
@@ -290,6 +318,7 @@ export default function AutoCotizador() {
                         required
                       >
                         <option value="">Seleccionar provincia</option>
+                        <option value="capital-federal">Capital Federal</option>
                         <option value="buenos-aires">Buenos Aires</option>
                         <option value="santa-fe">Santa Fe</option>
                         <option value="cordoba">Córdoba</option>
@@ -322,6 +351,22 @@ export default function AutoCotizador() {
 
                 {/* DATOS DEL VEHÍCULO */}
                 <h5 className="mb-3">Datos del Vehículo</h5>
+                
+                <Alert variant="info" className="mb-3">
+                  <Alert.Heading className="h6">
+                    ℹ️ Sobre el Código InfoAuto
+                  </Alert.Heading>
+                  <small>
+                    El código InfoAuto identifica cada vehículo en el mercado argentino. 
+                    <strong> Si no lo conoces</strong>, puedes:
+                    <ul className="mb-0 mt-2">
+                      <li>Consultarlo en el sitio web de InfoAuto</li>
+                      <li>Revisar la documentación de tu vehículo</li>
+                      <li>Ejemplos: Toyota Corolla 2012 = <code>8840030</code></li>
+                    </ul>
+                  </small>
+                </Alert>
+
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>
@@ -401,7 +446,7 @@ export default function AutoCotizador() {
                       />
                     </Form.Group>
                   </Col>
-                  <Col md={8}>
+                  <Col md={4}>
                     <Form.Group>
                       <Form.Label>Patente *</Form.Label>
                       <Form.Control
@@ -409,9 +454,44 @@ export default function AutoCotizador() {
                         name="patente"
                         value={formData.patente}
                         onChange={handleInputChange}
-                        placeholder="ABC123"
+                        placeholder="AB123CD"
                         required
                       />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label>Código InfoAuto *</Form.Label>
+                      <Form.Control
+                        type="number"
+                        name="codIA"
+                        value={formData.codIA}
+                        onChange={handleInputChange}
+                        placeholder="Ej: 8840030"
+                        required
+                      />
+                      <Form.Text className="text-muted">
+                        {formData.codIA && formData.codIA !== '0' 
+                          ? '✓ Código ingresado' 
+                          : '⚠️ Ingresa el código InfoAuto del vehículo'}
+                      </Form.Text>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col md={12}>
+                    <Form.Group>
+                      <Form.Label>Uso del Vehículo *</Form.Label>
+                      <Form.Select
+                        name="uso"
+                        value={formData.uso}
+                        onChange={handleInputChange}
+                        required
+                      >
+                        <option value="particular">Particular</option>
+                        <option value="comercial">Comercial</option>
+                      </Form.Select>
                     </Form.Group>
                   </Col>
                 </Row>
