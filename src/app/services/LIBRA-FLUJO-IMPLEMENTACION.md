@@ -13,7 +13,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │ PASO 1: OBTENER PLANES COMERCIALES (Seguros disponibles)        │
 │ GET /CommercialProductsByBranchAgentValidityType                │
-│ ├─ Params: ramo=4, agentCode=10674, tipoVigencia=4             │
+│ ├─ Params: ramo=4, agentCode=[FROM_ENV], tipoVigencia=4        │
 │ ├─ Return: Array de planes                                      │
 │ │   { code, ProductCode, description, ...}                      │
 │ └─ usar: planComercial = planes[0].code                         │
@@ -310,7 +310,7 @@ const handleEmitirPoliza = async () => {
 
 5. **Transformación de datos**
    - Provincia: 24 = Buenos Aires
-   - AgentCode: 10674
+   - AgentCode: [FROM .env.local]
    - Ramo: 4 = Automotores
    - TipoVigencia: 4 = Trimestral
 
@@ -334,4 +334,4 @@ const handleEmitirPoliza = async () => {
 Base URL: https://uat.libraseguros.com.ar/Sise3GBELibraCoreUatWebApi
 Username: (en .env.local)
 Password: (en .env.local)
-Agent Code: 10674
+Agent Code: (en .env.local)
