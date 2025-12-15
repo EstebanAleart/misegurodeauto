@@ -1,0 +1,186 @@
+.auto-cotizador {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.auto-cotizador h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.auto-cotizador .card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.auto-cotizador .card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.auto-cotizador .form-label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.auto-cotizador .form-control,
+.auto-cotizador .form-select {
+  border: 2px solid #e0e6ed;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.auto-cotizador .form-control:focus,
+.auto-cotizador .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.1);
+}
+
+.auto-cotizador .btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.auto-cotizador .btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.auto-cotizador .btn-primary:disabled {
+  opacity: 0.8;
+}
+
+.auto-cotizador .btn-secondary {
+  background: #6c757d;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+}
+
+.auto-cotizador .btn-secondary:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.auto-cotizador .btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.auto-cotizador .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.cotizacion-resultado {
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cotizacion-resultado h3 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.cotizacion-resultado .card-header {
+  border-radius: 12px 12px 0 0;
+}
+
+.auto-cotizador .alert {
+  border: none;
+  border-radius: 8px;
+  border-left: 4px solid;
+  animation: slideDown 0.3s ease;
+}
+
+.auto-cotizador .alert-danger {
+  border-left-color: #dc3545;
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.auto-cotizador .alert-success {
+  border-left-color: #28a745;
+  background-color: #d4edda;
+  color: #155724;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auto-cotizador hr {
+  border: 0;
+  border-top: 2px solid #e0e6ed;
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 992px) {
+  .auto-cotizador .card {
+    margin-bottom: 2rem;
+  }
+
+  .cotizacion-resultado {
+    position: relative !important;
+    top: 0 !important;
+  }
+
+  .auto-cotizador h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .auto-cotizador {
+    padding: 1rem 0;
+  }
+
+  .auto-cotizador h1 {
+    font-size: 1.5rem;
+  }
+
+  .auto-cotizador .form-control,
+  .auto-cotizador .form-select {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .auto-cotizador .btn-primary,
+  .auto-cotizador .btn-secondary {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}

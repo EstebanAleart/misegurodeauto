@@ -1,15 +1,17 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import fetchingVehicles from './components/fetching/fetchVehicleType';
 import AutocompleteBrand from './components/autocomplete/autocompleteBrand';
 import fetchingModels from './components/fetching/fetchingModel';
 import AutocompleteModel from './components/autocomplete/autocompleteModel';
 import AutocompleteProvinces from './components/autocomplete/autocompleteProvinces';
 import IconWhatsapp from './components/icon/iconWhatsapp';
+import AutoCotizador from './components/autoCotizador/autoCotizador';
 // import IconMail from './components/icon/iconMail';
 
 export default function ContactFormMain() {
+  const [activeTab, setActiveTab] = useState('solicitar');
   const [brands, setBrands] = useState([]);
   const [type, setType] = useState("");
   const [selectedBrand, setSelectedBrand] = useState(undefined);
@@ -128,10 +130,21 @@ export default function ContactFormMain() {
   }
 
   return (
-    <Container>
-      {/* <h1 className="text-primary my-4">Formulario de Contacto</h1> */}
-      <h1 className="text-primary my-4 ">     </h1>
-      <Form className="text-dark fw-bold mt-5" onSubmit={handleSubmit}>
+    <>
+      <Container className="mt-4 mb-5">
+        <Tabs
+          id="main-tabs"
+          activeKey={activeTab}
+          onSelect={(k) => setActiveTab(k)}
+          className="mb-4"
+        >
+          <Tab eventKey="cotizador" title="Auto Cotizador LIBRA">
+            <AutoCotizador />
+          </Tab>
+          <Tab eventKey="solicitar" title="Solicitar Cotización">
+            <Container className="mt-4">
+              <h3 className="text-primary mb-4">Formulario de Solicitud de Cotización</h3>
+              <Form className="text-dark fw-bold mt-5" onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Col sm={12} md={6} className="mb-3">
             <Form.Group controlId="nombre">
@@ -236,7 +249,11 @@ export default function ContactFormMain() {
         </Button>
         </Col>
         </Row>
-      </Form>
-    </Container>
+              </Form>
+            </Container>
+          </Tab>
+        </Tabs>
+      </Container>
+    </>
   );
 }
